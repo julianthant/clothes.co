@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Clothes.co
 
-## Getting Started
+A clothing store built with Next.js 14 and Auth.js v5. It pulls a live product catalog from the ASOS API and has a full account system with email verification, password reset and two-factor sign-in.
 
-First, run the development server:
+## Status
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Not finished. Development stopped in May 2024.
+
+| Area | State |
+| --- | --- |
+| Sign-up, sign-in, Google and Facebook OAuth | Done |
+| Email verification, password reset, email change | Done |
+| Two-factor sign-in with emailed codes | Done |
+| Account settings: profile, avatar, addresses, payment methods | Done |
+| Product catalog with filters and product pages | Done |
+| Cart, checkout and order history | Not built. The pages are placeholders. |
+
+## What it does
+
+- Lists ASOS products by category through the ASOS RapidAPI, with sorting, filters and pagination.
+- Registers users with a password (hashed with bcrypt) or with Google or Facebook.
+- Sends verification, password-reset and two-factor emails through Resend.
+- Lets a signed-in user manage name, date of birth, gender, country, phone number, avatar, saved addresses and saved payment methods, and delete the account.
+- Looks up a card's bank and scheme from its BIN when the user adds a payment method.
+
+Payment methods are a demo. Enter test card numbers only.
+
+## Tech stack
+
+- **App:** Next.js 14 (App Router, server actions), TypeScript, React Query
+- **Auth:** Auth.js v5 (`next-auth@5`) with the Prisma adapter
+- **Database:** MongoDB through Prisma
+- **UI:** Tailwind CSS, shadcn/ui (Radix), NextUI, Embla carousel, Framer Motion
+- **Forms:** React Hook Form with Zod
+- **Email:** Resend
+- **Monitoring:** Sentry
+
+## Run it locally
+
+You need Node.js 18 or later, a MongoDB database, a RapidAPI key with the ASOS and BIN checker APIs, and a Resend API key.
+
+1. Install the dependencies. `postinstall` runs `prisma generate`.
+
+   ```bash
+   npm install
+   ```
+
+2. Create `.env` with these variables:
+
+   ```bash
+   DATABASE_URL=            # MongoDB connection string
+   AUTH_SECRET=             # any long random string
+   APP_URL=http://localhost:3000
+   GOOGLE_CLIENT_ID=
+   GOOGLE_CLIENT_SECRET=
+   FACEBOOK_CLIENT_ID=
+   FACEBOOK_CLIENT_SECRET=
+   RESEND_API_KEY=
+   RAPIDAPI_KEY_1=
+   RAPIDAPI_KEY_3=          # fallback key, used when the first one fails
+   ```
+
+3. Push the schema and start the dev server:
+
+   ```bash
+   npx prisma db push
+   npm run dev
+   ```
+
+4. Open http://localhost:3000.
+
+## Project layout
+
+```text
+prisma/schema.prisma      User, Account, Address, Payment and token models
+src/app/(home)/           Storefront, shop, cart and account settings pages
+src/app/auth/             Sign-in, register, verification and reset pages
+src/server/actions/       Server actions for auth, profile, addresses, payments and security
+src/server/get-user-data/ Data access, including the ASOS catalog request
+src/lib/auth.ts           Auth.js configuration
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
