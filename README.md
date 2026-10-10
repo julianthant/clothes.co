@@ -2,6 +2,10 @@
 
 A clothing store built with Next.js 14 and Auth.js v5. It pulls a live product catalog from the ASOS API and has a full account system with email verification, password reset and two-factor sign-in.
 
+**Live site:** https://clothes.julianzaw.me. The catalog works. Sign-in isn't set up for this address.
+
+![Clothes.co shop page with filters](.github/assets/shop.png)
+
 ## Status
 
 Not finished. Development stopped in May 2024.
